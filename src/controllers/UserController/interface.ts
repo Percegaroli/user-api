@@ -4,5 +4,5 @@ export interface BaseRequestParams {
 
 export interface GetUserListRequestParams {
   page?: number;
-  quantity?: number;
+  limit?: number;
 }

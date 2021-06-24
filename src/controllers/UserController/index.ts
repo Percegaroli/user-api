@@ -15,7 +15,7 @@ class UserController {
   }
 
   public async getList (req: Request<{}, {}, {}, GetUserListRequestParams>, res: Response) {
-    const userList = await UserService.getUserList(req.params)
+    const userList = await UserService.getUserList(req.query)
     return res.status(StatusCodes.OK).send(userList)
   }
 

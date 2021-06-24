@@ -33,6 +33,10 @@ class UserRepository {
   async delete (user: UserModel) {
     return userCollection.remove(user)
   }
+
+  async getDataCount(){
+    return userCollection.count();
+  }
 }
 
 export default new UserRepository()

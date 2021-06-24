@@ -6,6 +6,7 @@ import { UserModel } from '../model/UserModel'
 import UserRepository from '../repository/UserRepository'
 import { generateUniqueId } from '../utils/generateId'
 import { CreateUserResponseDTO } from '../DTO/CreateUserResponseDTO'
+import { GetUserListResponseDTO } from '../DTO/GetUserListResponseDTO'
 
 class UserService {
   async getById (id: string) {
@@ -13,10 +14,18 @@ class UserService {
     return user ? this.createUserResponseDTO(user) : user
   }
 
-  async getUserList ({ page = 0, quantity = 8 }: GetUserListRequestParams) {
-    const offset = page * quantity
-    const users = await UserRepository.findMany(quantity, offset)
-    return users.map(this.createUserResponseDTO)
+  async getUserList ({ page = 1, limit = 8 }: GetUserListRequestParams): Promise<GetUserListResponseDTO> {
+    if (limit === 0) limit = 8;
+    const offset = limit * (page - 1);
+    const [ users, dataCount ] = await Promise.all([
+      UserRepository.findMany(limit, offset),
+      UserRepository.getDataCount()
+    ])
+    const userDTOs = users.map(this.createUserResponseDTO)
+    return {
+      count: Math.round(dataCount / limit ),
+      data: userDTOs
+    }
   }
 
   async createUser (userDTO: CreateUserRequestDTO): Promise<CreateUserResponseDTO> {
