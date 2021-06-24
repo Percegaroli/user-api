@@ -1,3 +1,3 @@
 export interface CreateUserResponseDTO {
-  _id: number
+  _id: string
 }

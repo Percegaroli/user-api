@@ -3,11 +3,11 @@ import { StatusCodes } from 'http-status-codes'
 import { UpdateUserDTO } from '../../DTO/UpdateUserDTO'
 import { CreateUserRequestDTO } from '../../DTO/CreateUserRequestDTO'
 import UserService from '../../service/UserService'
-import { GetUserRequestQueryParams, GetUserListRequestParams } from './interface'
+import { GetUserListRequestParams, BaseRequestParams } from './interface'
 
 class UserController {
-  public async get (req: Request<{}, {}, {}, GetUserRequestQueryParams>, res: Response) {
-    const user = await UserService.getUser(req.query.email)
+  public async get (req: Request<BaseRequestParams>, res: Response) {
+    const user = await UserService.getById(req.params.id)
     if (user) {
       return res.status(StatusCodes.OK).send(user)
     }
@@ -24,8 +24,8 @@ class UserController {
     return res.status(StatusCodes.CREATED).send(user)
   }
 
-  public async edit (req: Request<{}, {}, UpdateUserDTO, GetUserRequestQueryParams>, res: Response) {
-    await UserService.editUser(req.body, req.query.email)
+  public async edit (req: Request<BaseRequestParams, {}, UpdateUserDTO>, res: Response) {
+    await UserService.editUser(req.body, req.params.id)
     return res.status(StatusCodes.NO_CONTENT).send()
   }
 

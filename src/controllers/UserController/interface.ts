@@ -1,5 +1,5 @@
-export interface GetUserRequestQueryParams{
-  email: string
+export interface BaseRequestParams {
+  id: string
 }
 
 export interface GetUserListRequestParams {

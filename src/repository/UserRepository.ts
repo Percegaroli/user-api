@@ -1,9 +1,13 @@
 import userCollection from '../data/UserData'
-import UserModel from '../model/UserModel'
+import { UserModel } from '../model/UserModel'
 
 class UserRepository {
   async findByEmail (email: string) {
     return userCollection.findOne({ email: email })
+  }
+
+  async findById (id: string) {
+    return userCollection.findOne({ _id: id })
   }
 
   async findMany (quantity: number, offset: number) {
