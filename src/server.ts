@@ -1,3 +1,3 @@
-import App from './config/app';
+import App from './config/app'
 
-App.listen(3333);
+App.listen(3333)
