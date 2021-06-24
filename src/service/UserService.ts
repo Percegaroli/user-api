@@ -47,6 +47,15 @@ class UserService {
     }
   }
 
+  async deleteUser (id: string): Promise<boolean> {
+    const user = await UserRepository.findById(id)
+    if (user) {
+      UserRepository.delete(user)
+      return true
+    }
+    return false
+  }
+
   private createUserResponseDTO (user: UserModel): UserResponseDTO {
     const { name, email, pictureUrl } = user
     return {

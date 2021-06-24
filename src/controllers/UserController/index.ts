@@ -29,8 +29,9 @@ class UserController {
     return res.status(StatusCodes.NO_CONTENT).send()
   }
 
-  public async delete () {
-
+  public async delete (req: Request<BaseRequestParams>, res: Response) {
+    const hasDeleted = await UserService.deleteUser(req.params.id)
+    return res.status(hasDeleted ? StatusCodes.NO_CONTENT : StatusCodes.NOT_FOUND).send()
   }
 }
 

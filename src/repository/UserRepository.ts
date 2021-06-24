@@ -29,6 +29,10 @@ class UserRepository {
   async update (user: UserModel) {
     return userCollection.update(user)
   }
+
+  async delete (user: UserModel) {
+    return userCollection.remove(user)
+  }
 }
 
 export default new UserRepository()
