@@ -16,4 +16,4 @@ It runs at port 3333 by default
 
 This project uses Open API
 
-For a list of endpoints, check this [link]("http://localhost:3333/docs")
+For a list of endpoints, run the app then access [link](http://localhost:3333/docs)
