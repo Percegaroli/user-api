@@ -57,6 +57,7 @@ const models: TsoaRoute.Models = {
         "properties": {
             "name": {"dataType":"string"},
             "pictureUrl": {"dataType":"string"},
+            "email": {"dataType":"string"},
         },
         "additionalProperties": false,
     },

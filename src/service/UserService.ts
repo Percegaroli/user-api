@@ -15,8 +15,8 @@ class UserService {
   }
 
   async getUserList ({ page = 1, limit = 8 }: GetUserListRequestParams): Promise<GetUserListResponseDTO> {
-    console.log('aqui')
     if (limit === 0) limit = 8;
+    if (page === 0 ) page = 1
     const offset = limit * (page - 1);
     const [ users, dataCount ] = await Promise.all([
       UserRepository.findMany(limit, offset),
@@ -48,7 +48,7 @@ class UserService {
     if (user) {
       const updatedUser = {
         ...user,
-        email: user.email,
+        email: userDTO.email ?? user.email,
         name: userDTO.name ?? user.name,
         pictureUrl: userDTO.pictureUrl ?? user.pictureUrl,
         _id: user._id
