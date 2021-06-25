@@ -15,6 +15,7 @@ class UserService {
   }
 
   async getUserList ({ page = 1, limit = 8 }: GetUserListRequestParams): Promise<GetUserListResponseDTO> {
+    console.log('aqui')
     if (limit === 0) limit = 8;
     const offset = limit * (page - 1);
     const [ users, dataCount ] = await Promise.all([
@@ -42,7 +43,7 @@ class UserService {
     }
   }
 
-  async editUser (userDTO: UpdateUserDTO, id: string) {
+  async editUser (userDTO: UpdateUserDTO, id: string): Promise<boolean> {
     const user = await UserRepository.findById(id)
     if (user) {
       const updatedUser = {
@@ -53,7 +54,9 @@ class UserService {
         _id: user._id
       }
       UserRepository.update(updatedUser)
+      return true;
     }
+    return false;
   }
 
   async deleteUser (id: string): Promise<boolean> {

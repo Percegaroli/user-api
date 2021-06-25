@@ -3,9 +3,9 @@ import UserController from '../../controllers/UserController'
 
 const router = Router()
 
-router.get('/user/all', UserController.getList)
+//router.get('/user/all', UserController.getList)
 
-router.get('/user/:id', UserController.get)
+//router.get('/user/:id', UserController.get)
 
 router.post('/user', UserController.create)
 

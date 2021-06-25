@@ -1,6 +1,8 @@
-import express from 'express'
+import express, { Response as ExResponse, Request as ExRequest } from 'express'
 import cors from 'cors'
+import swaggerUi from 'swagger-ui-express'
 import UserRoutes from './routes/UserRoutes'
+import { RegisterRoutes } from './openAPI/routes';
 
 class App {
   public express: express.Application
@@ -9,10 +11,21 @@ class App {
     this.express = express()
     this.middlewares()
     this.routes()
+    this.configureSwagger()
+
   }
 
   routes () {
-    this.express.use(UserRoutes)
+    RegisterRoutes(this.express)
+    //this.express.use(UserRoutes)
+  }
+
+  configureSwagger(){
+    this.express.use('/docs', swaggerUi.serve, async (_req: ExRequest, res: ExResponse) => {
+      return res.send(
+        swaggerUi.generateHTML(await import("./openAPI/swagger.json"))
+      )
+    })
   }
 
   middlewares () {

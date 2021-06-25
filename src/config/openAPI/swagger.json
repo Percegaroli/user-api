@@ -1,0 +1,307 @@
+{
+	"components": {
+		"examples": {},
+		"headers": {},
+		"parameters": {},
+		"requestBodies": {},
+		"responses": {},
+		"schemas": {
+			"UserResponseDTO": {
+				"properties": {
+					"name": {
+						"type": "string"
+					},
+					"email": {
+						"type": "string"
+					},
+					"pictureUrl": {
+						"type": "string"
+					},
+					"_id": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"name",
+					"email",
+					"pictureUrl",
+					"_id"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"PaginatedResponse_UserResponseDTO_": {
+				"properties": {
+					"count": {
+						"type": "number",
+						"format": "double"
+					},
+					"data": {
+						"items": {
+							"$ref": "#/components/schemas/UserResponseDTO"
+						},
+						"type": "array"
+					}
+				},
+				"required": [
+					"count",
+					"data"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"GetUserListResponseDTO": {
+				"$ref": "#/components/schemas/PaginatedResponse_UserResponseDTO_"
+			},
+			"CreateUserResponseDTO": {
+				"properties": {
+					"_id": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"_id"
+				],
+				"type": "object",
+				"additionalProperties": false,
+				"example": {
+					"_id": "e532645a-46e6"
+				}
+			},
+			"CreateUserRequestDTO": {
+				"properties": {
+					"name": {
+						"type": "string"
+					},
+					"email": {
+						"type": "string"
+					},
+					"pictureUrl": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"name",
+					"email",
+					"pictureUrl"
+				],
+				"type": "object",
+				"additionalProperties": false,
+				"example": {
+					"name": "Cloud Strife",
+					"email": "cloud.strife@gmail.com",
+					"pictureUrl": "http://www.picture.com.br/cloud"
+				}
+			},
+			"UpdateUserDTO": {
+				"properties": {
+					"name": {
+						"type": "string"
+					},
+					"pictureUrl": {
+						"type": "string"
+					}
+				},
+				"type": "object",
+				"additionalProperties": false,
+				"example": {
+					"name": "Cloud Strife",
+					"email": "cloud.strife@gmail.com",
+					"pictureUrl": "http://www.picture.com.br/cloud"
+				}
+			}
+		},
+		"securitySchemes": {}
+	},
+	"info": {
+		"title": "welcome",
+		"version": "1.0.0",
+		"license": {
+			"name": "MIT"
+		},
+		"contact": {}
+	},
+	"openapi": "3.0.0",
+	"paths": {
+		"/users": {
+			"get": {
+				"operationId": "GetList",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/GetUserListResponseDTO"
+								}
+							}
+						}
+					}
+				},
+				"description": "Retrieves page of users",
+				"tags": [
+					"users"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"description": "Page number to be recovered, starting at index 1",
+						"in": "query",
+						"name": "page",
+						"required": false,
+						"schema": {
+							"format": "double",
+							"type": "number"
+						},
+						"example": 1
+					},
+					{
+						"description": "Quantity of users by page",
+						"in": "query",
+						"name": "limit",
+						"required": false,
+						"schema": {
+							"format": "double",
+							"type": "number"
+						},
+						"example": 5
+					}
+				]
+			}
+		},
+		"/user/{id}": {
+			"get": {
+				"operationId": "Get",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"allOf": [
+										{
+											"$ref": "#/components/schemas/UserResponseDTO"
+										}
+									],
+									"nullable": true
+								}
+							}
+						}
+					}
+				},
+				"description": "Retrieves a user by id",
+				"tags": [
+					"users"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"description": "User id",
+						"in": "path",
+						"name": "id",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				]
+			},
+			"patch": {
+				"operationId": "Edit",
+				"responses": {
+					"204": {
+						"description": "No content"
+					}
+				},
+				"description": "Updates user info.",
+				"tags": [
+					"users"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"description": "User id",
+						"in": "path",
+						"name": "id",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/UpdateUserDTO"
+							}
+						}
+					}
+				}
+			},
+			"delete": {
+				"operationId": "Delete",
+				"responses": {
+					"204": {
+						"description": "No content"
+					}
+				},
+				"description": "Deletes a user by id",
+				"tags": [
+					"users"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"description": "User id",
+						"in": "path",
+						"name": "id",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				]
+			}
+		},
+		"/user": {
+			"post": {
+				"operationId": "Create",
+				"responses": {
+					"201": {
+						"description": "",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/CreateUserResponseDTO"
+								}
+							}
+						}
+					}
+				},
+				"description": "Creates a new user",
+				"tags": [
+					"users"
+				],
+				"security": [],
+				"parameters": [],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/CreateUserRequestDTO"
+							}
+						}
+					}
+				}
+			}
+		}
+	},
+	"servers": [
+		{
+			"url": "/"
+		}
+	]
+}

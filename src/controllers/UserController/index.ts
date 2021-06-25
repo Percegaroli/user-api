@@ -1,37 +1,78 @@
-import { Request, Response } from 'express'
 import { StatusCodes } from 'http-status-codes'
 import { UpdateUserDTO } from '../../DTO/UpdateUserDTO'
 import { CreateUserRequestDTO } from '../../DTO/CreateUserRequestDTO'
 import UserService from '../../service/UserService'
-import { GetUserListRequestParams, BaseRequestParams } from './interface'
+import { Body, Controller, Delete, Get, Patch, Path, Post, Query, Route, SuccessResponse, Tags } from 'tsoa'
+import { UserResponseDTO } from '../../DTO/UserResponseDTO'
+import { GetUserListResponseDTO } from '../../DTO/GetUserListResponseDTO'
+import { CreateUserResponseDTO } from '../../DTO/CreateUserResponseDTO'
 
-class UserController {
-  public async get (req: Request<BaseRequestParams>, res: Response) {
-    const user = await UserService.getById(req.params.id)
-    if (user) {
-      return res.status(StatusCodes.OK).send(user)
-    }
-    return res.status(StatusCodes.NOT_FOUND).send()
+@Route()
+@Tags('users')
+export class UserController extends Controller {
+  /**
+   * Retrieves page of users
+   * @example page 1
+   * @example limit 5
+   * @param page Page number to be recovered, starting at index 1
+   * @param limit Quantity of users by page
+   */
+  @Get('users')
+  public async getList (
+    @Query() page?: number,
+    @Query() limit?: number
+  ): Promise<GetUserListResponseDTO> {
+    return UserService.getUserList({ limit, page})
   }
 
-  public async getList (req: Request<{}, {}, {}, GetUserListRequestParams>, res: Response) {
-    const userList = await UserService.getUserList(req.query)
-    return res.status(StatusCodes.OK).send(userList)
+  /**
+   * Retrieves a user by id
+   * @param id User id
+   */
+  @Get('user/{id}')
+  public async get (@Path() id: string): Promise<UserResponseDTO | null> {
+    const user = UserService.getById(id)
+    if (user) return user 
+    this.setStatus(StatusCodes.NOT_FOUND)
+    return null
   }
 
-  public async create (req: Request<{}, {}, CreateUserRequestDTO>, res: Response) {
-    const user = await UserService.createUser(req.body)
-    return res.status(StatusCodes.CREATED).send(user)
+  /**
+   * Creates a new user
+   * @param requestBody 
+   */
+  @Post('user')
+  @SuccessResponse(StatusCodes.CREATED)
+  public async create (@Body() requestBody: CreateUserRequestDTO): Promise<CreateUserResponseDTO> {
+    const user =  UserService.createUser(requestBody)
+    this.setStatus(StatusCodes.CREATED)
+    return user
   }
 
-  public async edit (req: Request<BaseRequestParams, {}, UpdateUserDTO>, res: Response) {
-    await UserService.editUser(req.body, req.params.id)
-    return res.status(StatusCodes.NO_CONTENT).send()
+  /**
+   * Updates user info. 
+   * @param id User id
+   * @param requestBody 
+   */
+  @Patch('user/{id}')
+  public async edit (
+    @Path() id: string,
+    @Body() requestBody: UpdateUserDTO,
+  ) {
+    const hasSucceded = await UserService.editUser(requestBody, id)
+    this.setStatus(hasSucceded ? StatusCodes.NO_CONTENT : StatusCodes.NOT_FOUND)
+    return
   }
 
-  public async delete (req: Request<BaseRequestParams>, res: Response) {
-    const hasDeleted = await UserService.deleteUser(req.params.id)
-    return res.status(hasDeleted ? StatusCodes.NO_CONTENT : StatusCodes.NOT_FOUND).send()
+  /**
+   * Deletes a user by id
+   * @param id User id
+   */
+  @Delete('user/{id}')
+  public async delete (@Path() id: string): Promise<void> {
+    const hasSucceded = await UserService.deleteUser(id)
+    this.setStatus(hasSucceded ? StatusCodes.NO_CONTENT : StatusCodes.NOT_FOUND)
+    return 
   }
 }
 
