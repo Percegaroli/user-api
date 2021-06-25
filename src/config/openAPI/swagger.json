@@ -117,7 +117,7 @@
 		"securitySchemes": {}
 	},
 	"info": {
-		"title": "welcome",
+		"title": "user-api",
 		"version": "1.0.0",
 		"license": {
 			"name": "MIT"
