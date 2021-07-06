@@ -1,7 +1,6 @@
 import express, { Response as ExResponse, Request as ExRequest } from 'express'
 import cors from 'cors'
 import swaggerUi from 'swagger-ui-express'
-import UserRoutes from './routes/UserRoutes'
 import { RegisterRoutes } from './openAPI/routes';
 
 class App {
@@ -12,12 +11,10 @@ class App {
     this.middlewares()
     this.routes()
     this.configureSwagger()
-
   }
 
   routes () {
     RegisterRoutes(this.express)
-    //this.express.use(UserRoutes)
   }
 
   configureSwagger(){
